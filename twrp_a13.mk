@@ -1,23 +1,31 @@
-# Inherit from those products. Most specific first.
+DEVICE_PATH := device/samsung/a13
+
+# Release name
+PRODUCT_RELEASE_NAME := a13
+
+# Inherit from common AOSP config
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
-# Kernel is ARM64, core should then be 64 Bit
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 
 # Inherit some common TWRP stuff.
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-# Inherit from a13 device
+# Inherit device configuration
 $(call inherit-product, device/samsung/a13/device.mk)
 
+- PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/root,recovery/root)
++ PRODUCT_COPY_FILES += $(call cc_prebuilt_binary, sgdisk)
++ PRODUCT_COPY_FILES += $(call cc_prebuilt_binary, cgdisk)
++ PRODUCT_COPY_FILES += $(call cc_prebuilt_binary, gdisk)
++ PRODUCT_COPY_FILES += $(call cc_prebuilt_binary, fixparts)
++ PRODUCT_COPY_FILES += $(call cc_prebuilt_binary, lz4)
+
+## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := a13
 PRODUCT_NAME := twrp_a13
+PRODUCT_MODEL := SM-A135x
 PRODUCT_BRAND := samsung
-PRODUCT_MODEL := SM-A135F
 PRODUCT_MANUFACTURER := samsung
-
 PRODUCT_GMS_CLIENTID_BASE := android-samsung-ss
 
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRIVATE_BUILD_DESC="a13nsxx-user 14 UP1A.231005.007 A135FXXU7EXF1 release-keys"
-
-BUILD_FINGERPRINT := samsung/a13nsxx/a13:14/UP1A.231005.007/A135FXXU7EXF1:user/release-keys
+# Zorin 
